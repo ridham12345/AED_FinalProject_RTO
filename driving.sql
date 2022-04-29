@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 28, 2022 at 04:20 PM
+-- Generation Time: Apr 29, 2022 at 12:27 PM
 -- Server version: 5.7.36
 -- PHP Version: 7.4.26
 
@@ -55,22 +55,25 @@ DROP TABLE IF EXISTS `apply_driving_license`;
 CREATE TABLE IF NOT EXISTS `apply_driving_license` (
   `apply_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
-  `school_vehicle_id` int(11) NOT NULL,
-  `apply_date` date NOT NULL,
+  `driving_school_id` int(11) NOT NULL,
+  `vehicle_id` int(11) NOT NULL,
+  `apply_date` varchar(20) NOT NULL,
   `status` enum('Pending','Accepted','Rejected') NOT NULL DEFAULT 'Pending',
   `added_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `vec_id` int(11) NOT NULL,
   PRIMARY KEY (`apply_id`),
   KEY `customer_id` (`customer_id`),
-  KEY `driving_school_id` (`school_vehicle_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  KEY `driving_school_id` (`driving_school_id`),
+  KEY `driving_school_id_2` (`driving_school_id`),
+  KEY `vehicle_id` (`vehicle_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `apply_driving_license`
 --
 
-INSERT INTO `apply_driving_license` (`apply_id`, `customer_id`, `school_vehicle_id`, `apply_date`, `status`, `added_date`, `vec_id`) VALUES
-(1, 3, 4, '2022-04-28', 'Pending', '2022-04-28 08:56:15', 1);
+INSERT INTO `apply_driving_license` (`apply_id`, `customer_id`, `driving_school_id`, `vehicle_id`, `apply_date`, `status`, `added_date`) VALUES
+(1, 3, 3, 1, '2022-04-30', 'Pending', '2022-04-29 07:33:02'),
+(3, 4, 5, 1, '2022-01-01', 'Pending', '2022-04-29 12:23:42');
 
 -- --------------------------------------------------------
 
@@ -157,39 +160,17 @@ CREATE TABLE IF NOT EXISTS `driving_school` (
   `password` varchar(20) NOT NULL,
   `active_status` enum('ACTIVE','DEACTIVE') NOT NULL DEFAULT 'ACTIVE',
   PRIMARY KEY (`driving_school_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `driving_school`
 --
 
 INSERT INTO `driving_school` (`driving_school_id`, `name`, `address`, `email`, `year_of_establishment`, `contact_no`, `contact_person`, `mobile`, `password`, `active_status`) VALUES
-(3, 'Shrdha', 'Bhatar	', 'aa@gmail.com', 1991, '0261227482', 'Bhavik', '8733070825', 'admin1', 'ACTIVE');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `driving_school_vehicle`
---
-
-DROP TABLE IF EXISTS `driving_school_vehicle`;
-CREATE TABLE IF NOT EXISTS `driving_school_vehicle` (
-  `school_vehicle_id` int(11) NOT NULL AUTO_INCREMENT,
-  `vehicle_id` int(11) NOT NULL,
-  `driving_school_id` int(11) NOT NULL,
-  PRIMARY KEY (`school_vehicle_id`),
-  KEY `vehicle_id` (`vehicle_id`),
-  KEY `driving_school_id` (`driving_school_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `driving_school_vehicle`
---
-
-INSERT INTO `driving_school_vehicle` (`school_vehicle_id`, `vehicle_id`, `driving_school_id`) VALUES
-(4, 1, 3),
-(5, 2, 3),
-(6, 5, 3);
+(3, 'Shrdha', 'Bhatar	', 'aa@gmail.com', 1991, '0261227482', 'Bhavik', '8733070825', 'admin1', 'ACTIVE'),
+(4, 'Shrdha1', 'Bhatar	1', 'aa@gmail.com', 1991, '0261227482', 'Bhavik', '8733070825', 'admin1', 'ACTIVE'),
+(5, 'Shrdha2', 'Bhatar	', 'aa@gmail.com', 1991, '0261227482', 'Bhavik', '8733070825', 'admin1', 'ACTIVE'),
+(6, 'Shrdha4', 'Bhatar	', 'aa@gmail.com', 1991, '0261227482', 'Bhavik', '8733070825', 'admin1', 'ACTIVE');
 
 --
 -- Constraints for dumped tables
@@ -200,20 +181,14 @@ INSERT INTO `driving_school_vehicle` (`school_vehicle_id`, `vehicle_id`, `drivin
 --
 ALTER TABLE `apply_driving_license`
   ADD CONSTRAINT `apply_driving_license_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `apply_driving_license_ibfk_2` FOREIGN KEY (`school_vehicle_id`) REFERENCES `driving_school_vehicle` (`school_vehicle_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `apply_driving_license_ibfk_2` FOREIGN KEY (`driving_school_id`) REFERENCES `driving_school` (`driving_school_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `apply_driving_license_ibfk_3` FOREIGN KEY (`vehicle_id`) REFERENCES `addnewvehicle` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `customer_login`
 --
 ALTER TABLE `customer_login`
   ADD CONSTRAINT `customer_login_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `driving_school_vehicle`
---
-ALTER TABLE `driving_school_vehicle`
-  ADD CONSTRAINT `driving_school_vehicle_ibfk_1` FOREIGN KEY (`driving_school_id`) REFERENCES `driving_school` (`driving_school_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `driving_school_vehicle_ibfk_2` FOREIGN KEY (`vehicle_id`) REFERENCES `addnewvehicle` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
