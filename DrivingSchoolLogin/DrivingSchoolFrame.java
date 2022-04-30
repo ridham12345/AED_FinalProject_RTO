@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author sundermetpalli
+ * @author DELL
  */
 public class DrivingSchoolFrame extends javax.swing.JFrame {
 
